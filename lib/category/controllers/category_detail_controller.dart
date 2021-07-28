@@ -2,34 +2,29 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo/category/models/category_model.dart';
+import 'package:todo/category/services/category_service.dart';
 import 'package:todo/common/no_internet.dart';
 import 'package:todo/todo/models/todo_model.dart';
 import 'package:todo/todo/models/todo_res_model.dart';
 import 'package:todo/todo/services/todo_service.dart';
+class CategoryDetailController extends GetxController {
+  final _categoryService = CategoryService();
+  final _todoService = TodoService();
 
-class TodosController extends GetxController {
-  TodoService service = TodoService();
+  var categoryModel = CategoryModel().obs;
+
+  RxBool busy = false.obs;
   var todos = <TodoModel>[].obs;
-  var fetching = false.obs;
-  var hasNext = false.obs;
-  var fetchingMore = false.obs;
-  var refreshing = false.obs;
-  RxBool updating = false.obs;
-  RxBool updated = false.obs;
+  RxBool fetching = false.obs;
+  RxBool hasNext = false.obs;
+  RxBool fetchingMore = false.obs;
+  RxBool refreshing = false.obs;
 
-  var scrollController = ScrollController();
-
-  @override
-  void onInit() async {
-    // called after the widget is rendered on screen
-    super.onInit();
-    await fetchTodos();
-  }
-
-  Future fetchTodos() async {
+   Future fetchTodos() async {
     try {
       fetching(true);
-      TodoResponseModel doc = await service.fetchTodos();
+      TodoResponseModel doc = await _todoService.fetchTodos();
       todos.clear();
       todos.addAll(doc.docs!);
       hasNext.value = doc.hasNextPage!;
@@ -57,7 +52,7 @@ class TodosController extends GetxController {
   Future refreshTodos() async {
     try {
       refreshing(true);
-      TodoResponseModel doc = await service.fetchTodos();
+      TodoResponseModel doc = await _todoService.fetchTodos();
       todos.clear();
       todos.addAll(doc.docs!);
       hasNext.value = doc.hasNextPage!;
@@ -85,7 +80,7 @@ class TodosController extends GetxController {
     try {
       fetchingMore(true);
       if (hasNext.value == true) {
-        TodoResponseModel doc = await service.fetchTodos(
+        TodoResponseModel doc = await _todoService.fetchTodos(
           offset: todos.length,
         );
         todos.addAll(doc.docs!);
@@ -114,34 +109,32 @@ class TodosController extends GetxController {
     }
   }
 
-  updateTodo(
-      {required String? todoId,
-      required int position,
-      required TodoModel? todoModel}) async {
+  
+
+  
+
+  Future fetchCategoryById({required String? molId}) async {
     try {
-      updating.value = true;
-      updated.value = false;
-      var model = await service.updateTodo(id: todoId, todoModel: todoModel);
-      todos.removeWhere((element) => element.id == todoId);
-      todos.insert(position, model);
-      // todos.add(model);
-      updated.value = true;
-      updating.value = false;
-    } catch (e) {
-      updating(false);
-      updated.value = false;
-      print(e.toString());
-      if (e.runtimeType == SocketException) {
-        noInternetAlert();
-      } else {
-        Get.snackbar(
-          'Error',
-          'Error Updating Todo, Try again later',
-          snackPosition: SnackPosition.BOTTOM,
-          colorText: Colors.white,
-          backgroundColor: Colors.red,
-        );
-      }
+      busy.value = true;
+      CategoryModel model = await _categoryService.fetchCategoryById(molId!);
+      categoryModel.value = model;
+      await fetchTodos();
+      busy.value = false;
+      return;
+    } catch (error) {
+      busy(false);
+      return Get.dialog(AlertDialog(
+        title: Text("Failed to load company"),
+        content: Text(error.toString()),
+        actions: [
+          ElevatedButton(
+            child: Text("OK"),
+            onPressed: () {
+              Get.back();
+            },
+          )
+        ],
+      ));
     }
   }
 }

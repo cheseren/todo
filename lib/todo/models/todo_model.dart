@@ -1,18 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:todo/category/models/category_model.dart';
 
 part 'todo_model.g.dart';
 
 @JsonSerializable()
 class TodoModel {
-  String? todoId, name, description;
-  num? dateCreated, dateAccomplished;
-  TodoModel({
-    this.todoId,
-    this.name,
-    this.description,
-    this.dateCreated,
-    this.dateAccomplished,
-  });
+  String? name;
+  String? description;
+  String? done;
+  CategoryModel? category;
+  @JsonKey(name: '_id')
+  String? id;
+  TodoModel({this.id, this.name, this.description, this.category, this.done});
 
   factory TodoModel.fromJson(Map<String, dynamic> json) =>
       _$TodoModelFromJson(json);

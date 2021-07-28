@@ -51,10 +51,10 @@ class NetworkHandler {
     return response;
   }
 
-  Future<http.Response> patch(String uri, Map<String, dynamic> body) async {
+  Future<http.Response> update(String uri, Map<String, dynamic> body) async {
     var url = getUrl(isRemote: isRemote, uri: uri, params: {});
     log.d(body);
-    var response = await http.patch(
+    var response = await http.put(
       url,
       headers: {
         "Content-type": "application/json",

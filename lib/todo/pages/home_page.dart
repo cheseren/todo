@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:todo/src/common/custom_button.dart';
+import 'package:todo/common/custom_button.dart';
+import 'package:todo/common/todo_widgte.dart';
 import 'package:todo/todo/controllers/todo_controller.dart';
 import 'package:todo/todo/models/todo_model.dart';
 
@@ -21,6 +22,19 @@ class HomePage extends StatelessWidget {
               fontSize: 20,
             )),
         centerTitle: true,
+        actions: [
+          TextButton(
+              onPressed: () {
+                controller.fetchTodos();
+              },
+              child: Text(
+                'Refresh',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ))
+        ],
       ),
       body: Column(
         children: [
@@ -43,20 +57,7 @@ class HomePage extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var result = await Get.toNamed('/addTodo');
-          if (result != null) {
-            TodoModel todoModel = result;
-            controller.todos.add(todoModel);
-            Get.snackbar(
-              'Success',
-              'Todo was added successfully',
-              snackPosition: SnackPosition.BOTTOM,
-              colorText: Colors.white,
-              backgroundColor: Colors.green,
-            );
-          }
-        },
+        onPressed: _addTodo,
         backgroundColor: Get.theme.primaryColor,
         tooltip: 'Increment',
         child: Icon(Icons.add),
@@ -75,37 +76,26 @@ class HomePage extends StatelessWidget {
       shrinkWrap: true,
       itemBuilder: (context, index) {
         // controller.setProductId(products[index]);
-        return todoWidget(todo: index);
+        return TodoWidget(
+          name: controller.todos[index].name,
+          description: controller.todos[index].description,
+          done: controller.todos[index].done,
+          bdone: controller.updating.value ? CircularProgressIndicator() :  Checkbox(
+            value: controller.todos[index].done == "yes" ? true : false,
+            onChanged: (val)async {
+              await controller.updateTodo(
+                todoId: controller.todos[index].id,
+                position: index,
+                todoModel: TodoModel(done: val == true ? 'yes' : 'no'),
+              );
+            },
+          ),
+          onTap: () {
+            _editTodo(controller.todos[index].id);
+          },
+        );
       },
     );
-  }
-
-  Widget todoWidget({required int todo}) {
-    return Card(
-        child: ListTile(
-      title: Text(
-        Get.find<TodosController>().todos[todo].name ?? 'Untitled Todo',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      subtitle: Text(
-        Get.find<TodosController>().todos[todo].description!,
-        style: TextStyle(
-          color: Colors.grey,
-          fontSize: 16,
-        ),
-      ),
-      trailing: Text(
-        todo.toString(),
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
-        ),
-      ),
-    ));
   }
 
   Widget buildEmptyListWidget() {
@@ -131,5 +121,38 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _addTodo() async {
+    var result = await Get.toNamed('/addTodoPage');
+    if (result != null) {
+      TodoModel todoModel = result;
+      controller.todos.add(todoModel);
+      Get.snackbar(
+        'Success',
+        'Todo was added successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
+      );
+    }
+  }
+
+  _editTodo(String? todoId) async {
+    var result =
+        await Get.toNamed('/addTodoPage?todoId=$todoId', arguments: todoId);
+    if (result != null) {
+      TodoModel model = result;
+      controller.todos.removeWhere((element) => element.id == todoId);
+      controller.todos.add(model);
+
+      Get.snackbar(
+        'Success',
+        'Todo was updated successfully',
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        backgroundColor: Colors.green,
+      );
+    }
   }
 }
