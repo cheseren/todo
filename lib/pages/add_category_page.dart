@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo/category/controllers/add_category_controller.dart';
-import 'package:todo/common/busyWidget.dart';
+import 'package:todo/controllers/add_category_controller.dart';
+import 'package:todo/widgets/busyWidget.dart';
 
-class AddCategory extends StatefulWidget {
+class AddCategoryPage extends StatefulWidget {
   final String? categoryId;
 
-  const AddCategory({Key? key, this.categoryId}) : super(key: key);
+  const AddCategoryPage({Key? key, this.categoryId}) : super(key: key);
   @override
   _AddCategoryState createState() => _AddCategoryState();
 }
 
-class _AddCategoryState extends State<AddCategory> {
+class _AddCategoryState extends State<AddCategoryPage> {
   AddCategoryController controller = AddCategoryController();
   final _formKey = GlobalKey<FormState>();
 

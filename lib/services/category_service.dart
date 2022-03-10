@@ -1,9 +1,10 @@
 import 'dart:convert' as convert;
 
-import 'package:todo/category/models/category_model.dart';
-import 'package:todo/category/models/category_res_model.dart';
 
-import '../../network_handler.dart';
+import 'package:todo/models/category_model.dart';
+import 'package:todo/models/category_res_model.dart';
+
+import '../utils/network_handler.dart';
 
 class CategoryService {
   NetworkHandler _networkHandler = NetworkHandler();

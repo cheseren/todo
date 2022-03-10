@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo/category/models/category_model.dart';
-import 'package:todo/category/services/category_service.dart';
+import 'package:todo/models/category_model.dart';
+import 'package:todo/services/category_service.dart';
 
 class AddCategoryController extends GetxController {
   CategoryService _categoryService = CategoryService();

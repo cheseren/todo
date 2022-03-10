@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo/common/no_internet.dart';
-import 'package:todo/todo/models/todo_model.dart';
-import 'package:todo/todo/models/todo_res_model.dart';
-import 'package:todo/todo/services/todo_service.dart';
+import 'package:todo/models/todo_model.dart';
+import 'package:todo/models/todo_res_model.dart';
+import 'package:todo/services/todo_service.dart';
+import 'package:todo/widgets/no_internet.dart';
 
 class TodosController extends GetxController {
   TodoService service = TodoService();

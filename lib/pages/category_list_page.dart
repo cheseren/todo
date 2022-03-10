@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:todo/category/controllers/category_list_controller.dart';
-import 'package:todo/category/models/category_model.dart';
-import 'package:todo/common/debouncer.dart';
+import 'package:todo/controllers/category_list_controller.dart';
+import 'package:todo/models/category_model.dart';
+import 'package:todo/widgets/debouncer.dart';
 
 import 'add_category_page.dart';
 
@@ -171,7 +171,7 @@ class _CategoryListState extends State<CategoryListPage> {
   }
 
   void goToAdd() async {
-    var result = await Get.to(AddCategory());
+    var result = await Get.to(AddCategoryPage());
     if (result == true) {
       Get.snackbar(
         'Success!',

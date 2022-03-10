@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo/common/no_internet.dart';
+import 'package:todo/widgets/no_internet.dart';
 
 errorhandler(Object e, String title, String description) {
   if (e.runtimeType == SocketException) {

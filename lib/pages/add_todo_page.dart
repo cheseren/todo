@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
-import 'package:todo/category/models/category_model.dart';
-import 'package:todo/common/custom_button.dart';
-import 'package:todo/todo/controllers/add_todo_controller.dart';
+import 'package:todo/controllers/add_todo_controller.dart';
+import 'package:todo/models/category_model.dart';
+import 'package:todo/widgets/custom_button.dart';
 
 class AddTodoPage extends StatelessWidget {
   // final String? todoId;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:todo/category/controllers/category_detail_controller.dart';
-import 'package:todo/common/busyWidget.dart';
-import 'package:todo/common/todo_widgte.dart';
-import 'package:todo/todo/models/todo_model.dart';
+import 'package:todo/controllers/category_detail_controller.dart';
+import 'package:todo/models/todo_model.dart';
+import 'package:todo/widgets/busyWidget.dart';
+import 'package:todo/widgets/todo_widgte.dart';
 
 import 'add_category_page.dart';
 
@@ -153,7 +153,7 @@ class _CategoryDetailPageState extends State<CategoryDetailPage> {
 
   void goToEdit() async {
     var result = await Get.to(
-      AddCategory(
+      AddCategoryPage(
         categoryId: Get.parameters['categoryId'],
       ),
     );

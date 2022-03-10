@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:todo/category/models/category_model.dart';
+
+import 'category_model.dart';
 
 part 'todo_model.g.dart';
 

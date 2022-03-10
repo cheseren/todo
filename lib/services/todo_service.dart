@@ -1,9 +1,10 @@
 import 'dart:convert' as convert;
 
-import 'package:todo/todo/models/todo_model.dart';
-import 'package:todo/todo/models/todo_res_model.dart';
 
-import '../../network_handler.dart';
+import 'package:todo/models/todo_model.dart';
+import 'package:todo/models/todo_res_model.dart';
+
+import '../utils/network_handler.dart';
 
 class TodoService {
   NetworkHandler _networkHandler = NetworkHandler();

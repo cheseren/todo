@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
 import 'package:get/get.dart';
 import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
-import 'package:todo/common/custom_button.dart';
-import 'package:todo/common/todo_widgte.dart';
-import 'package:todo/todo/controllers/todo_controller.dart';
-import 'package:todo/todo/models/todo_model.dart';
+import 'package:todo/controllers/todo_controller.dart';
+import 'package:todo/models/todo_model.dart';
+import 'package:todo/widgets/custom_button.dart';
+import 'package:todo/widgets/todo_widgte.dart';
 
 class HomePage extends StatelessWidget {
   final controller = Get.find<TodosController>();
