@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo/utils/my_translations.dart';
 
-import 'bindings/all_binding.dart';
 import 'utils/unknown_route_page.dart';
 import 'utils/routes.dart';
 
 void main() {
-  runApp(GetMaterialApp(
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    title: 'Flutter Demo',
+    title: 'Todo',
     defaultTransition: Transition.zoom,
     translations: MyTranslations(),
     locale: Locale('en', 'US'),
@@ -18,14 +25,23 @@ void main() {
       primaryColor: Colors.purple,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
+
+
+    //  initialRoute: "/masterPage",
+      // unknownRoute: GetPage(
+      //   name: '/notfoundPaage',
+      //   page: () => const UnknownRoutePage(),
+      // ),
+      // unknownRoute: '/notFoundPage',
+      // getPages: Routes.getPages,
     
     // home: MyApp(),
-    initialBinding: AllBinding(),
-    initialRoute: Routes.homePage,
+    initialRoute: "/home",
     unknownRoute: GetPage(
-      name: '/notfound',
+      name: '/notFoundPage',
       page: () => UnknownRoutePage(),
     ),
     getPages: Routes.getPages
-  ));
+  );
+  }
 }

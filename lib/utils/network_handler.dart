@@ -5,7 +5,9 @@ import 'package:logger/logger.dart';
 class NetworkHandler {
     bool isRemote = false;
   // LOCAL
-  String localBaseUrl = '192.168.43.210:4000';
+  // String localBaseUrl = '192.168.43.210:4000';
+    static const String baseUrl = "192.168.0.105:4000";
+
 
   //  REMOTE
   final String remoteBaseUrl = 'app.patseki.co.ke';
@@ -17,7 +19,7 @@ class NetworkHandler {
   }) {
     return isRemote == true
         ? Uri.https(remoteBaseUrl, uri, params)
-        : Uri.http(localBaseUrl, uri, params);
+        : Uri.http(baseUrl, uri, params);
   }
 
   var log = Logger();
