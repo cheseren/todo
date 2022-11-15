@@ -8,10 +8,8 @@ import 'package:todo/widgets/todo_widgte.dart';
 import '../models/todo_model.dart';
 
 class HomePage extends StatelessWidget {
-
   HomePage({Key? key}) : super(key: key);
-      final c = Get.put(TodosController());
-
+  final c = Get.put(TodosController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +25,11 @@ class HomePage extends StatelessWidget {
         actions: [
           TextButton(
               onPressed: () {
-                c.fetchTodos();
+                Get.toNamed("/categories");
+                // c.fetchTodos();
               },
               child: Text(
-                'Refresh',
+                'Categories',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -82,16 +81,18 @@ class HomePage extends StatelessWidget {
           name: c.todos[index].name,
           description: c.todos[index].description,
           done: c.todos[index].done,
-          bdone: c.updating.value ? CircularProgressIndicator() :  Checkbox(
-            value: c.todos[index].done == "yes" ? true : false,
-            onChanged: (val)async {
-              await c.updateTodo(
-                todoId: c.todos[index].id,
-                position: index,
-                todoModel: TodoModel(done: val == true ? 'yes' : 'no'),
-              );
-            },
-          ),
+          bdone: c.updating.value
+              ? CircularProgressIndicator()
+              : Checkbox(
+                  value: c.todos[index].done == "yes" ? true : false,
+                  onChanged: (val) async {
+                    await c.updateTodo(
+                      todoId: c.todos[index].id,
+                      position: index,
+                      todoModel: TodoModel(done: val == true ? 'yes' : 'no'),
+                    );
+                  },
+                ),
           onTap: () {
             _editTodo(c.todos[index].id);
           },
@@ -141,8 +142,7 @@ class HomePage extends StatelessWidget {
   }
 
   _editTodo(String? todoId) async {
-    var result =
-        await Get.toNamed('/addTodo?todoId=$todoId', arguments: todoId);
+    var result = await Get.toNamed('/addTodo?todoId=$todoId');
     if (result != null) {
       TodoModel model = result;
       c.todos.removeWhere((element) => element.id == todoId);

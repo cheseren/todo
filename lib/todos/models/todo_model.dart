@@ -5,7 +5,7 @@ class TodoModel {
   String? description;
   String? done;
   CategoryModel? categoryId;
-  String? category;
+  // String? category;
   String? id;
 
   TodoModel({
@@ -13,20 +13,28 @@ class TodoModel {
     this.name,
     this.description,
     this.categoryId,
-    this.category,
     this.done,
+    // this.category
   });
 
   factory TodoModel.fromJson(Map<String, dynamic> json) => TodoModel(
-      name: json["name"],
-      id: json["_id"],
-      description: json["description"],
-      done: json["done"]);
+        name: json["name"],
+        id: json["_id"],
+        description: json["description"],
+        // category: json["category"],
+        done: json["done"],
+        categoryId: json["categoryId"] == null
+            ? null
+            : CategoryModel.fromJson(
+                json["categoryId"],
+              ),
+      );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "description": description,
         "done": done,
-        "categoryId": category,
+        // "category": category,
+        "categoryId": categoryId == null ? null : categoryId!.toJson(),
       };
 }

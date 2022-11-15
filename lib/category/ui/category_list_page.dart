@@ -126,7 +126,7 @@ class _CategoryListState extends State<CategoryListPage> {
         trailing: Icon(Icons.menu),
         onTap: () {
           someString == null
-              ? Get.toNamed('/categoryDetailPage?categoryId=${model.id}')
+              ? Get.toNamed('/categoryDetail?categoryId=${model.id}')
                
               : Get.back(result: model);
         },

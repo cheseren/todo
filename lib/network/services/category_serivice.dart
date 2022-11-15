@@ -48,7 +48,7 @@ class CategoryService {
       final response = await dioClient.get('/categories',
           // options: Options(headers: {"x-access-token": "token"}),
           queryParameters: {
-            "productName": productName,
+            "queryString": productName,
             // 'offset': offset.toString(),
           });
       // print(response);

@@ -103,7 +103,8 @@ class AddTodoPage extends StatelessWidget {
     );
   }
 
-  Widget buildCategory() => TypeAheadFormField<CategoryModel>(
+  Widget buildCategory() {
+    return TypeAheadFormField<CategoryModel>(
         textFieldConfiguration: TextFieldConfiguration(
           focusNode: c.categoryFocusNode,
           controller: c.categoryCtl,
@@ -125,11 +126,11 @@ class AddTodoPage extends StatelessWidget {
         onSuggestionSelected: (CategoryModel? suggestion) {
           c.categoryCtl.text = suggestion!.title!;
           c.todoModel.value.categoryId = suggestion;
-          c.todoModel.value.category = suggestion.id;
-          // categoryModel = suggestion;
+          c.selectedCategoryModel.value = suggestion;
+          // c.categoryModel = suggestion;
         },
         validator: (value) => value != null && value.isEmpty ||
-                c.todoModel.value.categoryId == null
+                c.selectedCategoryModel.value.id == null
             ? 'Please select a Category from list'
             : null,
         noItemsFoundBuilder: (context) {
@@ -141,10 +142,11 @@ class AddTodoPage extends StatelessWidget {
           );
         },
       );
+  }
 
   Widget buildSendButton() {
     return CustomButton(
-      title: "Send",
+      title: c.isForEdit.value ? "Save Changes":"Send",
       send: send,
       busy: c.creating.value,
     );

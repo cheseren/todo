@@ -135,9 +135,9 @@ class TodosService {
   Future<TodoModel> updateOneApi(
       TodoModel? todoModel, String? id) async {
     try {
-      // print(id);
+      // print(todoModel!.toJson());
       var response = await dioClient.put(
-        "/category/$id",
+        "/todo/$id",
         data: todoModel!.toJson(),
       );
       print(response.data);

@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:get/get.dart';
+import 'package:todo/category/models/category_model.dart';
 import 'package:todo/utils/erro_handler.dart';
 import 'package:todo/widgets/no_internet.dart';
 
@@ -11,6 +13,7 @@ import '../models/todo_model.dart';
 
 class AddTodoController extends GetxController {
   final todoModel = TodoModel().obs;
+  final selectedCategoryModel = CategoryModel().obs;
   final _todosService = TodosService();
   final _categoryService = CategoryService();
   String? todoId;
@@ -30,6 +33,7 @@ class AddTodoController extends GetxController {
   RxBool updating = false.obs;
   RxBool updated = false.obs;
   RxBool busy = false.obs;
+  RxBool isForEdit = false.obs;
 
   @override
   void onClose() {
@@ -42,11 +46,7 @@ class AddTodoController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    todoId = Get.parameters["todoId"];
-    // print(Get.parameters["todoId"]);
-    if (Get.parameters["todoId"] != null) {
-      await fetchTodoById();
-    }
+    fetchTodoById();
   }
 
   void sendTodo() {}
@@ -55,7 +55,14 @@ class AddTodoController extends GetxController {
     try {
       creating(true);
       created.value = false;
-      var model = await _todosService.addOneApi(todoModel.value);
+      todoModel.value.categoryId = selectedCategoryModel.value;
+      var model = await _todosService.addOneApi(
+        TodoModel(
+          name: categoryCtl.text,
+          description: descriptionCtl.text,
+          categoryId: selectedCategoryModel.value
+        ),
+      );
       todoModel.value = model;
       created.value = true;
       creating(false);
@@ -71,8 +78,10 @@ class AddTodoController extends GetxController {
     try {
       updating.value = true;
       updated.value = false;
-      var model =
-          await _todosService.updateOneApi(todoModel.value,todoId,);
+      var model = await _todosService.updateOneApi(
+        todoModel.value,
+        todoId,
+      );
       todoModel.value = model;
       updated.value = true;
       updating.value = false;
@@ -96,17 +105,24 @@ class AddTodoController extends GetxController {
 
   Future fetchTodoById() async {
     try {
-      busy.value = true;
-      var result = await _todosService.fetchOneApi(Get.parameters["todoId"]);
-      todoModel.value = result;
-      nameCtl.text = todoModel.value.name!;
-      descriptionCtl.text = todoModel.value.description!;
-      categoryCtl.text = todoModel.value.category != null
-          ? todoModel.value.categoryId!.title!
-          : '';
-      busy.value = false;
+      String? _todoId = Get.parameters["todoId"];
+      todoId = _todoId;
+      if (_todoId != null) {
+        busy.value = true;
+        isForEdit(true);
+        TodoModel result = await _todosService.fetchOneApi(todoId);
+        todoModel.value = result;
+        nameCtl.text = result.name!;
+        descriptionCtl.text = result.description!;
+        selectedCategoryModel.value = result.categoryId!;
+        if (result.categoryId != null) {
+          categoryCtl.text = result.categoryId!.title!;
+        }
+        busy.value = false;
+      } else {}
     } catch (e) {
-      busy.value = false;
+      busy(false);
+      isForEdit(false);
       print(e.toString());
 
       if (e.runtimeType == SocketException) {
