@@ -108,18 +108,25 @@ class CategoryService {
       );
       print(response.data);
       return CategoryModel.fromJson(response.data);
-    } catch (e) {
-      rethrow;
+    } on DioError catch (e) {
+      // print(e);
+      // The request was made and the server responded with a status code
+      // that falls out of the range of 2xx and is also not 304.
+      if (e.response != null) {
+        // print(e.response!.data);
+        // print(e.response!.headers);
+        // print(e.response!.requestOptions);
+        throw Exception(e.response!.data);
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        // print(e.requestOptions);
+        // print(e.message);
+        throw Exception(e.message);
+      }
     }
   }
 
-  // Future<void> deleteOneApi(String id) async {
-  //   try {
-  //     await dioClient.delete('/product/$id');
-  //   } catch (e) {
-  //     rethrow;
-  //   }
-  // }
+ 
 
   Future<void> deleteOneApi(String id) async {
     try {

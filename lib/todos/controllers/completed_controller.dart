@@ -8,7 +8,7 @@ import '../../network/services/todos_service.dart';
 import '../models/todo_model.dart';
 import '../models/todos_model.dart';
 
-class TodosController extends GetxController {
+class CompletedController extends GetxController {
   TodosService _todosService = TodosService();
   var todos = <TodoModel>[].obs;
   var fetching = false.obs;
@@ -31,7 +31,7 @@ class TodosController extends GetxController {
     try {
       fetching(true);
       TodosModel doc = await _todosService.fetchManyApi(
-        done: "no",
+        done: "yes",
       );
       todos.clear();
       todos.addAll(doc.todos!);
@@ -61,7 +61,7 @@ class TodosController extends GetxController {
     try {
       refreshing(true);
       TodosModel doc = await _todosService.fetchManyApi(
-                done: "no",
+                done: "yes",
       );
       todos.clear();
       todos.addAll(doc.todos!);
@@ -92,7 +92,7 @@ class TodosController extends GetxController {
       if (hasNext.value == true) {
         TodosModel doc = await _todosService.fetchManyApi(
           offset: todos.length,
-          done: "no",
+          done: "yes",
 
         );
         todos.addAll(doc.todos!);

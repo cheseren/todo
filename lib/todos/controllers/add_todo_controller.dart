@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:get/get.dart';
-import 'package:todo/category/models/category_model.dart';
 import 'package:todo/utils/erro_handler.dart';
 import 'package:todo/widgets/no_internet.dart';
 
@@ -13,7 +11,7 @@ import '../models/todo_model.dart';
 
 class AddTodoController extends GetxController {
   final todoModel = TodoModel().obs;
-  final selectedCategoryModel = CategoryModel().obs;
+  // final selectedCategoryModel = CategoryModel().obs;
   final _todosService = TodosService();
   final _categoryService = CategoryService();
   String? todoId;
@@ -39,7 +37,7 @@ class AddTodoController extends GetxController {
   void onClose() {
     nameCtl.dispose();
     descriptionCtl.dispose();
-    descriptionFocusScope.dispose();
+    descriptionFocusScope.unfocus();
     super.onClose();
   }
 
@@ -55,13 +53,12 @@ class AddTodoController extends GetxController {
     try {
       creating(true);
       created.value = false;
-      todoModel.value.categoryId = selectedCategoryModel.value;
+      // todoModel.value.categoryId = selectedCategoryModel.value;
       var model = await _todosService.addOneApi(
         TodoModel(
-          name: categoryCtl.text,
-          description: descriptionCtl.text,
-          categoryId: selectedCategoryModel.value
-        ),
+            name: nameCtl.text,
+            description: descriptionCtl.text,
+            categoryId: todoModel.value.categoryId),
       );
       todoModel.value = model;
       created.value = true;
@@ -79,7 +76,10 @@ class AddTodoController extends GetxController {
       updating.value = true;
       updated.value = false;
       var model = await _todosService.updateOneApi(
-        todoModel.value,
+        TodoModel(
+            name: nameCtl.text,
+            description: descriptionCtl.text,
+            categoryId: todoModel.value.categoryId),
         todoId,
       );
       todoModel.value = model;
@@ -94,7 +94,7 @@ class AddTodoController extends GetxController {
       } else {
         Get.snackbar(
           'Error',
-          'Error Updating Todo, Try again later',
+          e.toString(),
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
           backgroundColor: Colors.red,
@@ -114,12 +114,14 @@ class AddTodoController extends GetxController {
         todoModel.value = result;
         nameCtl.text = result.name!;
         descriptionCtl.text = result.description!;
-        selectedCategoryModel.value = result.categoryId!;
+        // selectedCategoryModel.value = result.categoryId!;
         if (result.categoryId != null) {
           categoryCtl.text = result.categoryId!.title!;
         }
         busy.value = false;
-      } else {}
+      } else {
+        isForEdit(false);
+      }
     } catch (e) {
       busy(false);
       isForEdit(false);
@@ -139,10 +141,6 @@ class AddTodoController extends GetxController {
     }
   }
 
-  fetchCategorySuggestions(String queryString) async {
-    try {} catch (e) {}
-  }
-
   Future fetchCategorySuggestion(String queryString) async {
     try {
       var doc = await _categoryService.fetchManyApi(productName: queryString);
@@ -150,6 +148,29 @@ class AddTodoController extends GetxController {
       return mols;
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  Future<TodoModel?> deleteTodo({required String? todoId}) async {
+    try {
+      var model = await _todosService.deleteOneApi(todoId);
+      return model;
+    } catch (e) {
+      creating(false);
+      updated.value = false;
+      print(e.toString());
+      if (e.runtimeType == SocketException) {
+        noInternetAlert();
+      } else {
+        Get.snackbar(
+          'Error',
+          e.toString(),
+          snackPosition: SnackPosition.BOTTOM,
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+        return null;
+      }
     }
   }
 }

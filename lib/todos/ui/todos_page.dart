@@ -7,36 +7,13 @@ import 'package:todo/widgets/todo_widgte.dart';
 
 import '../models/todo_model.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class TodosPage extends StatelessWidget {
+  TodosPage({Key? key}) : super(key: key);
   final c = Get.put(TodosController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Todos",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            )),
-        centerTitle: true,
-        actions: [
-          TextButton(
-              onPressed: () {
-                Get.toNamed("/categories");
-                // c.fetchTodos();
-              },
-              child: Text(
-                'Categories',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ))
-        ],
-      ),
       body: Column(
         children: [
           Expanded(
@@ -86,10 +63,10 @@ class HomePage extends StatelessWidget {
               : Checkbox(
                   value: c.todos[index].done == "yes" ? true : false,
                   onChanged: (val) async {
-                    await c.updateTodo(
+                    await c.updateDoneTodo(
                       todoId: c.todos[index].id,
                       position: index,
-                      todoModel: TodoModel(done: val == true ? 'yes' : 'no'),
+                      done:val == true ? 'yes' : 'no',
                     );
                   },
                 ),

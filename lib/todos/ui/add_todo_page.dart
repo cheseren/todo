@@ -67,9 +67,9 @@ class AddTodoPage extends StatelessWidget {
         border: OutlineInputBorder(),
         labelText: "Title",
       ),
-      onChanged: (val) {
-        c.todoModel.value.name = val;
-      },
+      // onChanged: (val) {
+      //   c.todoModel.value.name = val;
+      // },
       onFieldSubmitted: (val) {
         c.descriptionFocusScope.requestFocus();
       },
@@ -126,11 +126,11 @@ class AddTodoPage extends StatelessWidget {
         onSuggestionSelected: (CategoryModel? suggestion) {
           c.categoryCtl.text = suggestion!.title!;
           c.todoModel.value.categoryId = suggestion;
-          c.selectedCategoryModel.value = suggestion;
+          // c.selectedCategoryModel.value = suggestion;
           // c.categoryModel = suggestion;
         },
         validator: (value) => value != null && value.isEmpty ||
-                c.selectedCategoryModel.value.id == null
+                c.todoModel.value.categoryId?.id == null
             ? 'Please select a Category from list'
             : null,
         noItemsFoundBuilder: (context) {
